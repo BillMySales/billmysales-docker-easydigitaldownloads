@@ -9,6 +9,8 @@
 		# (X-Forwarded-For). HTTPS detection is done by the image's wp-config.php,
 		# which turns X-Forwarded-Proto: https into HTTPS=on.
 		trusted_proxies static private_ranges
+		# Client IP = the right-most untrusted address (can't be spoofed).
+		trusted_proxies_strict
 	}
 }
 
@@ -44,7 +46,10 @@
 
 	# Sends *.php and unknown paths (pretty permalinks, /wp-json/...) to
 	# index.php through FastCGI; everything else is served as a static file.
-	php_fastcgi wordpress:9000
+	# PHP's REMOTE_ADDR is the client, not the proxy in front (e.g. Traefik).
+	php_fastcgi wordpress:9000 {
+		env REMOTE_ADDR {client_ip}
+	}
 	file_server
 }
 
