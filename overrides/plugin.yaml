@@ -1,0 +1,28 @@
+# Mount a plugin from a local directory, editable live (changes apply on the
+# next request). The plugin is not activated automatically.
+#
+# In .env:
+#   COMPOSE_FILE=compose.yaml:overrides/plugin.yaml
+#   PLUGIN_PATH=../my-plugin   # plugin source, relative to compose.yaml
+#   PLUGIN_NAME=my-plugin      # directory name under wp-content/plugins
+# Then: docker compose run --rm wp plugin activate "$PLUGIN_NAME"
+
+x-plugin: &plugin ${PLUGIN_PATH:?Set PLUGIN_PATH in .env}:/var/www/html/wp-content/plugins/${PLUGIN_NAME:?Set PLUGIN_NAME in .env}
+
+services:
+  wordpress:
+    volumes:
+      - *plugin
+  # Caddy serves the plugin's static files (CSS, JS, images).
+  caddy:
+    volumes:
+      - ${PLUGIN_PATH}:/var/www/html/wp-content/plugins/${PLUGIN_NAME}:ro
+  setup:
+    volumes:
+      - *plugin
+  cron:
+    volumes:
+      - *plugin
+  wp:
+    volumes:
+      - *plugin
