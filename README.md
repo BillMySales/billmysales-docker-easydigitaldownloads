@@ -202,6 +202,10 @@ Notes:
 Security
 --------
 
+- Client IP headers: PHP gets only the real client IP (as Caddy sees it) in
+  `REMOTE_ADDR`, `X-Forwarded-For` and `X-Real-IP`, and no `Client-Ip` or
+  `Cf-Connecting-Ip` (a client could forge them): Easy Digital Downloads
+  records customer IPs from `Client-Ip` or `X-Forwarded-For`.
 - No default secrets: compose fails if the required passwords are missing. The
   development template uses public passwords; never use it on a server.
 - Production defaults: `WP_DEBUG` off, `DISALLOW_FILE_EDIT` on, PHP version
