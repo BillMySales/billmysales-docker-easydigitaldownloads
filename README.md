@@ -194,8 +194,11 @@ Notes:
   `REDIS_HOST`, `docker compose up -d`, then `docker compose rm -sf redis`.
 - From inside the containers, the host machine is reachable as
   `host.docker.internal`.
-- Must-use plugins are loaded from `config/wordpress/mu-plugins`, not from
-  `wp-content/mu-plugins`.
+- Must-use plugins are loaded from `config/wordpress/mu-plugins` through
+  `WPMU_PLUGIN_DIR`, not from `wp-content/mu-plugins`: a bind mount inside
+  the `wp_data` volume would create root-owned directories.
+- The Redis object cache uses the Redis Object Cache plugin with its bundled
+  Predis client (the image has no phpredis).
 - Easy Digital Downloads has no Chilean peso: `currencies.php` adds CLP with
   the `$` symbol, no decimals and Chilean formatting (`$12.345`).
 
