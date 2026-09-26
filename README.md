@@ -45,8 +45,8 @@ Production
 
 ```shell
 cp .env.prod.example .env
-# Fill in WP_URL, SITE_ADDRESS, DB_PASSWORD, DB_ROOT_PASSWORD,
-# WP_ADMIN_PASSWORD, WP_ADMIN_EMAIL and the SMTP_* values.
+# Required: WP_URL, SITE_ADDRESS, DB_PASSWORD, DB_ROOT_PASSWORD,
+# WP_ADMIN_PASSWORD, WP_ADMIN_EMAIL. Recommended: the SMTP_* values.
 docker compose up -d
 ```
 
@@ -55,8 +55,8 @@ docker compose up -d
 - Behind another TLS-terminating proxy, use `SITE_ADDRESS=:80`; the
   `X-Forwarded-Proto: https` header is enough for WordPress to detect HTTPS.
 - Compose refuses to start while a required value is missing.
-- Configure SMTP: without it WordPress can't send any mail (order emails,
-  password resets).
+- Configure SMTP (recommended, not required): without `SMTP_HOST`
+  WordPress can't send any mail (order emails, password resets).
 - The `backup` profile is enabled by default in the production template.
 - Behind an existing Traefik (no host ports), use `overrides/traefik.yaml`
   (see [Overrides](#overrides)).
